@@ -2,8 +2,9 @@ name: YouTube Idea Engine — Daily Run
 
 on:
   schedule:
-    - cron: '0 1 * * *'  # 8:00 sáng giờ VN (UTC+7)
-  workflow_dispatch:       # Cho phép chạy thủ công
+    - cron: '0 1 * * *'   # 8:00 sáng giờ VN hàng ngày
+    - cron: '0 2 * * 1'   # 9:00 sáng giờ VN mỗi thứ 2 (learning)
+  workflow_dispatch:        # Cho phép chạy thủ công
 
 jobs:
   run-pipeline:
@@ -42,7 +43,12 @@ jobs:
         run: echo '${{ secrets.GOOGLE_CREDENTIALS_JSON }}' > credentials.json
 
       - name: Run pipeline for all channels
+        if: github.event.schedule == '0 1 * * *' || github.event_name == 'workflow_dispatch'
         run: python manage_channels.py run --all
+
+      - name: Run learning engine (every Monday)
+        if: github.event.schedule == '0 2 * * 1'
+        run: python learning_engine.py
 
       - name: Upload logs
         if: always()
