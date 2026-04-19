@@ -240,8 +240,10 @@ def cmd_add(supabase):
     try:
         supabase.table("channels").insert(row).execute()
         print(green(f"\n✓ Đã thêm kênh '{name}' thành công!"))
-        print(f"  Test: {bold(f'python manage_channels.py run --name \"{name}\" --dry-run --max-signals 5')}")
-        print(f"  Thật: {bold(f'python manage_channels.py run --name \"{name}\"')}")
+        cmd_test = f'python manage_channels.py run --name "{name}" --dry-run --max-signals 5'
+        cmd_real = f'python manage_channels.py run --name "{name}"'
+        print(f"  Test: {bold(cmd_test)}")
+        print(f"  Thật: {bold(cmd_real)}")
     except Exception as e:
         print(red(f"Lỗi: {e}"))
 
